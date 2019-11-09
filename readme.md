@@ -60,6 +60,10 @@ Default dump name file and dir:
 
 ## Instalation
 
+Getting this docker
+
+	git clone -b magento1-imotopecas git@github.com:lima195/docker-php72.git
+
 Requirements
 	
 	1 - Right structure
