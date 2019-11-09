@@ -49,9 +49,15 @@ default:
 	@echo " - make docker_up"
 	@echo " - // if you get the fallowing error: ERROR: Pool overlaps with other one on this address space"
 	@echo " - make docker_network_prune"
+	@echo " - make install_docker"
+	@echo " - make docker_restart_containers"
+	@echo " - make docker_reinstall_containers"
 	@echo " "
 	@echo " == PHP xdebug config =="
-	@echo " - make create_dns_host"
+	@echo " - make xdebug_tutorial"
+	@echo " - make get_xdebugso_file"
+	@echo " - make get_xdebug_ini"
+	@echo " - make config_xdebug_ini"
 	@echo " "
 	@echo " == Host =="
 	@echo " - make create_dns_host"
@@ -109,6 +115,31 @@ db_drop_tables:
 	$(USE_SUDO) docker exec -it $(MYSQL_DOCKER) sh -c "mysql -u $(MYSQL_USER) -p$(MYSQL_PASS) -h $(MYSQL_HOST) -P $(MYSQL_PORT) --silent --skip-column-names -e \"SHOW TABLES\" $(MYSQL_DB_NAME) | xargs -L1 -I% echo 'SET FOREIGN_KEY_CHECKS = 0; DROP TABLE %;' | mysql -u $(MYSQL_USER) -p$(MYSQL_PASS) -v $(MYSQL_DB_NAME)"
 
 ## Docker Tasks
+
+
+_install_docker:
+	sudo apt-get update;
+	sudo apt-get install \
+	    apt-transport-https \
+	    ca-certificates \
+	    curl \
+	    gnupg-agent \
+	    software-properties-common;
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -;
+	sudo add-apt-repository \
+	   "deb [arch=arm64] https://download.docker.com/linux/ubuntu \
+	   $(lsb_release -cs) \
+	   stable";
+	sudo apt-get update;
+	sudo apt-get install docker-ce docker-ce-cli containerd.io;
+	sudo usermod -aG docker `whoami`;
+	docker -v;
+
+_install_docker_compose:
+	sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose;
+	sudo chmod +x /usr/local/bin/docker-compose;
+	sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose;
+	docker-compose --version;
 
 docker_up:
 	$(USE_SUDO) docker-compose up -d
@@ -182,11 +213,12 @@ xdebug_tutorial:
 get_xdebugso_file:
 	$(USE_SUDO) docker exec -it $(PHP_DOCKER) sh -c "cd /usr/local/lib/php/extensions/; find -iname '*xdebug.so';";
 
+get_xdebug_ini:
+	$(USE_SUDO) docker exec -it $(PHP_DOCKER) sh -c "cat /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini;";
+
 config_xdebug_ini:
 	$(USE_SUDO) docker exec -it $(PHP_DOCKER) sh -c "vim /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini;";
 
-get_xdebug_ini:
-	$(USE_SUDO) docker exec -it $(PHP_DOCKER) sh -c "cat /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini;";
 
 ## Host Tasks
 
@@ -243,6 +275,21 @@ install_magento:
 	make create_dns_host
 	make create_dns_host_store_2
 	make magento1_magerun_create_admin
+
+install_docker:
+	@echo " "
+	@echo " Installing Docker"
+	@echo " "
+	make _install_docker
+	@echo " "
+	@echo " !!! It's recomended to reboot the system for apply docker permissions to remove the necessity for running commands with sudo !!!"
+	@echo " "
+	@echo " Installing Docker-compose"
+	@echo " "
+	make _install_docker_compose
+	@echo " "
+	@echo " Finished"
+	@echo " "
 
 PHONY: \
 	db_install_pv \
