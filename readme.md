@@ -21,9 +21,9 @@ This docker contains the following containers:
 Your project needed to fallow this structure:
 
 	├── your_project_dir/
-	│   ├── docker-php72/ 	(This repo)
-	│   ├── web/ 			(required - for run the project)
-	│   ├── mysql_dump/ 	(optional - to storage your database.sql if you have one)
+	│	├── docker-php72/ 	(This repo)
+	│	├── web/ 			(required - for run the project)
+	│	├── mysql_dump/ 	(optional - to storage your database.sql if you have one)
 
 ## Settings
 
