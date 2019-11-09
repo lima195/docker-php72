@@ -1,11 +1,12 @@
 version: '3.1'
 services:
   nginx:
-    container_name: docker-app_nginx
+    container_name: docker-imotopecas_nginx
     image: nginx:latest
     #restart: always
     volumes:
      - ./nginx_conf/default.conf:/etc/nginx/conf.d/default.conf
+     - ./nginx_conf/lojista.conf:/etc/nginx/conf.d/lojista.conf
      - ../web:/usr/share/nginx/www
     working_dir: /usr/share/nginx/www
     ports:
@@ -15,15 +16,15 @@ services:
       - 443
     links:
       - db
-      - php:docker-app_php
+      - php:docker-imotopecas_php
     depends_on:
       - php
     networks:
-      app_net:
+      imotopecas_net:
         ipv4_address: 172.22.0.102
 
   php:
-    container_name: docker-app_php
+    container_name: docker-imotopecas_php
     build:
       context: .
       dockerfile: ./php72/Dockerfile
@@ -34,11 +35,11 @@ services:
     ports:
       - 9000:9000
     networks:
-      app_net:
+      imotopecas_net:
         ipv4_address: 172.22.0.104
 
   db:
-    container_name: docker-app_mysql
+    container_name: docker-imotopecas_mysql
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     volumes:
@@ -46,29 +47,29 @@ services:
     #restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: app
+      MYSQL_USER: imotopecas
       MYSQL_PASSWORD: root
       MYSQL_DATABASE: root
     ports:
       - 3306:3306
     networks:
-      app_net:
+      imotopecas_net:
         ipv4_address: 172.22.0.108
 
   adminer:
-    container_name: docker-app_adminer
+    container_name: docker-imotopecas_adminer
     image: adminer
     #restart: always
     ports:
       - 8222:8080
     networks:
-      app_net:
+      imotopecas_net:
         ipv4_address: 172.22.0.112
     links:
       - db
 
   assets:
-    container_name: docker-app_assets
+    container_name: docker-imotopecas_assets
     #restart: always
     build:
       context: .
@@ -80,11 +81,44 @@ services:
       - 9019:9019
     tty: true
     networks:
-      app_net:
+      imotopecas_net:
         ipv4_address: 172.22.0.114
 
+  # mongo-express:
+  #   container_name: docker-imotopecas_mongo_express
+  #   image: mongo-express
+  #   #restart: always
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     ME_CONFIG_BASICAUTH_USERNAME: imotopecas
+  #     ME_CONFIG_BASICAUTH_PASSWORD: root
+  #     ME_CONFIG_MONGODB_PORT: 27017
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: root
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: root
+  #   links:
+  #     - mongo
+  #   networks:
+  #     imotopecas_net:
+  #       ipv4_address: 172.22.0.118
+
+  # mongo:
+  #   container_name: docker-imotopecas_mongo
+  #   image: mongo
+  #   #restart: always
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: root
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - ./volumes/MongoDB:/data/db
+  #   networks:
+  #     imotopecas_net:
+  #       ipv4_address: 172.22.0.120
+
 networks:
-  app_net:
+  imotopecas_net:
     ipam:
       driver: default
       config:
