@@ -7,107 +7,85 @@
 	https://www.linkedin.com/in/pedrohgdl/
 
 ## Intro
-	This docker contains the following containers:
+
+This docker contains the following containers:
 
 	* Nginx
 	* PHP 7.2 (and 7.1)
-	* Assets (With Nodejs, Yarn and Grunt)
+	* Assets (With Nodejs, npm and gulp)
 	* Mysql
 	* Adminer
 
 ## Structure
 
-	your_project_dir/
-		docker-php72/
-			assets/
-			etc/
-			nginx_conf/default
-			php71/
-			php72/
-			volumes/mysql
-			docker-compose.yml
-			Makefile
-		web/ (required - for run the project)
-		mysql_dump/ (optional - to storage your database.sql if you have one)
+Your project needed to fallow this structure:
+
+	├── your_project_dir/
+	│   ├── docker-php72/ 	(This repo)
+	│   ├── web/ 			(required - for run the project)
+	│   ├── mysql_dump/ 	(optional - to storage your database.sql if you have one)
 
 ## Settings
-	
-	This docker is set to run with:
 
-	Mysql credentials:
-		user: app (or root)
-		pass: root
-		database: app
-		host: 172.22.0.108
-		port: 3306
+Mysql credentials:
 
-	Nginx:
-		http://app
-		* assuming that your project php index is placed at ../web/index
+	user: imotopecas (or root)
+	pass: root
+	database: imotopecas
+	host: 172.22.0.108
+	port: 3306
 
-	PHP Xdebug:
-		xdebug.remote_enable=1
-		xdebug.remote_handler=dbgp
-		xdebug.remote_port=9001
-		xdebug.remote_autostart=1
-		xdebug.remote_connect_back=0
-		xdebug.idekey=docker
-		xdebug.remote_host=172.22.0.1
+Nginx:
 
-	Adminer:
-		http://localhost:8222
+	http://www.imotopecas.com
+	http://lojista.imotopecas.com
 
-	Assets:
-		gulp version: 
-			CLI version: 2.2.0
-			Local version: Unknown
-		yarn version:
-			1.19.1
-		nodejs version:
-			v13.1.0
+PHP Xdebug:
 
-	Default dump name file and dir:
-		../mysql_dump/database.sql
+	xdebug.remote_enable=1
+	xdebug.remote_handler=dbgp
+	xdebug.remote_port=9001
+	xdebug.remote_autostart=1
+	xdebug.remote_connect_back=0
+	xdebug.idekey=docker
+	xdebug.remote_host=172.22.0.1
 
+Adminer:
 
-## Changing Default Settings
+	http://localhost:8222
 
-	Mysql credentials: 
-		./docker-compose.yml lines: 48, 49, 50, 21
-		./Makefile lines: 21, 22, 23
+Default dump name file and dir:
 
-	Nginx host:
-		./nginx_conf/default.conf line: 11
-
-	PHP changing version 7.1 or 7.2:
-		./docker-compose.yml line 29
-
-	PHP Dockerfile:
-		./php71/Dockerfile
-		./php72/Dockerfile
-
-	Assets Dockerfile:
-		./assets/Dockerfile
-
-	[If your project run in public/ dir like Laravel Framework]
-		Add /public in:
-			./nginx_conf/default.conf line: 12
-
-	Default mysql dump file:
-		./Makefile line: 5
+	../mysql_dump/database.sql
 
 ## Instalation
 
-	* Get inside docker dir, and run:
-
-	docker-compose up -d;
-
-	* After that, to add a new dns host (assuming that you are using ubuntu) run:
-
-	make create_dns_host;
+Requirements
 	
-## Extra
+	1 - Right structure
+	2 - Docker and Docker-compose installed, if not, you can run
+		make install_docker;
 
-	See Makefile tasks, maybe it might be useful or just run:
+Get inside docker dir, and run:
 
-	make default;	
+	make install_magento;
+
+Access:
+	
+	http://www.imotopecas.com
+
+or
+
+	http://lojista.imotopecas.com
+	
+## Minify Javascript
+
+Get inside docker dir, and run:
+
+	make minjs;
+
+## To see all tasks:
+
+Get inside docker dir, and run:
+	
+	make;

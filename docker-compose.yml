@@ -49,7 +49,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: imotopecas
       MYSQL_PASSWORD: root
-      MYSQL_DATABASE: root
+      MYSQL_DATABASE: imotopecas
     ports:
       - 3306:3306
     networks:
