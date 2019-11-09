@@ -18,7 +18,7 @@
 ## Structure
 
 	your_project_dir/
-		docker/
+		docker-php72/
 			assets/
 			etc/
 			nginx_conf/default

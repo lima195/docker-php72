@@ -9,7 +9,7 @@ BASE_URL=app
 
 ## Do not edit vars above:
 
-DOCKER_DIR=docker
+DOCKER_DIR=docker-php72
 
 NGINX_HOST=172.22.0.102
 PHP_DOCKER=docker-app_php
