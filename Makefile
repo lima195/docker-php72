@@ -23,7 +23,7 @@ NGINX_WEB_ROOT=/usr/share/nginx/www
 
 MYSQL_DUMP_FILE_DIR=../mysql_dump
 MYSQL_USER=$(PROJECT)
-MYSQL_PASS=root
+MYSQL_PASS=$(PROJECT)
 MYSQL_DB_NAME=$(PROJECT)
 MYSQL_HOST=172.22.0.108
 MYSQL_PORT=3306
@@ -85,7 +85,7 @@ magento1_update_core_config_urls_store_2:
 	make magento1_show_core_config_data_urls
 
 create_dns_host_store_2:
-	$(USE_SUDO) -- sh -c "echo '$(NGINX_HOST) $(BASE_URL_STORE_2)' >> /etc/hosts";
+	echo '$(NGINX_HOST) $(BASE_URL_STORE_2)' >> /etc/hosts;
 
 npm_install:
 	$(USE_SUDO) docker exec -it $(ASSETS_DOCKER) sh -c "npm install";
@@ -223,7 +223,7 @@ config_xdebug_ini:
 ## Host Tasks
 
 create_dns_host:
-	$(USE_SUDO) -- sh -c "echo '$(NGINX_HOST) $(BASE_URL)' >> /etc/hosts";
+	echo '$(NGINX_HOST) $(BASE_URL)' >> /etc/hosts;
 
 ## Magento Tasks
 
@@ -272,8 +272,8 @@ install_magento:
 	make magento1_create_localxml
 	make magento1_set_permissions
 	make magento1_clear_cache
-	make create_dns_host
-	make create_dns_host_store_2
+	sudo make create_dns_host
+	sudo make create_dns_host_store_2
 	make magento1_magerun_create_admin
 
 install_docker:

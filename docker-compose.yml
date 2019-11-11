@@ -48,7 +48,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: imotopecas
-      MYSQL_PASSWORD: root
+      MYSQL_PASSWORD: imotopecas
       MYSQL_DATABASE: imotopecas
     ports:
       - 3306:3306
