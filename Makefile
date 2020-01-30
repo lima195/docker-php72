@@ -2,12 +2,12 @@
 
 ## Edit this vars:
 PROJECT=imotopecas
-MYSQL_DUMP_FILE=database.sql
+MYSQL_DUMP_FILE=dumpImotopecas20200110.sql
 BASE_URL=www.imotopecas.localhost
 # USE_SUDO=sudo
 
 ## CUSTOM VARS
-BASE_URL_STORE_2=lojista.imotopecas.localhost
+BASE_URL_STORE_2=seller.localhost
 
 ## Do not edit vars above:
 #================================================================#
@@ -21,7 +21,7 @@ MYSQL_DOCKER=docker-$(PROJECT)_mysql
 ASSETS_DOCKER=docker-$(PROJECT)_assets
 NGINX_WEB_ROOT=/usr/share/nginx/www
 
-MYSQL_DUMP_FILE_DIR=../mysql_dump
+MYSQL_DUMP_FILE_DIR=../databases
 MYSQL_USER=$(PROJECT)
 MYSQL_PASS=$(PROJECT)
 MYSQL_DB_NAME=$(PROJECT)
@@ -94,6 +94,14 @@ minjs:
 	$(USE_SUDO) docker exec -it $(ASSETS_DOCKER) sh -c "gulp min:js";
 	sudo chown `whoami`:`whoami` ../web/node_modules/ -R;
 	sudo chown `whoami`:`whoami` ../web/public/ -R;
+
+magento1_to_localhost:
+	$(USE_SUDO) docker exec -it $(MYSQL_DOCKER) sh -c "mysql -u $(MYSQL_USER) -p$(MYSQL_PASS) -h $(MYSQL_HOST) $(MYSQL_DB_NAME) -e \"UPDATE core_config_data SET value = 'http://localhost/' WHERE path in ('web/unsecure/base_url', 'web/secure/base_url')\"" -P $(MYSQL_PORT);
+	make magento1_show_core_config_data_urls;
+	cd ../web/;
+	rm -rf cache/* session/*;
+	sudo echo 'localhost $(BASE_URL)' >> /etc/hosts;
+
 
 ### Do not edit tasks above
 #================================================================#
