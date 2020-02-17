@@ -2,7 +2,7 @@
 
 ## Edit this vars:
 PROJECT=imotopecas
-MYSQL_DUMP_FILE=dumpImotopecas20200110.sql
+MYSQL_DUMP_FILE=database.sql
 BASE_URL=localhost
 # USE_SUDO=sudo
 
